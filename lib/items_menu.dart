@@ -5,7 +5,7 @@ import 'home.dart';
 import 'qr.dart';
 import 'history.dart';
 import 'acc.dart';
-import 'menu.dart';  // Для QRScreen
+import 'menu.dart';
 
 class ItemsScreen extends StatelessWidget {
   final String email;
@@ -31,7 +31,7 @@ class ItemsScreen extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         selectedFontSize: 0,
         unselectedFontSize: 0,
-        iconSize: 0, // щоб Flutter не задавав зайві відступи
+        iconSize: 0,
         items: [
           BottomNavigationBarItem(
             icon: SizedBox(
@@ -121,7 +121,7 @@ class ItemsScreen extends StatelessWidget {
               )),
             );
           }
-          // Можеш додати дії для інших кнопок
+
         },
 
       ),
@@ -150,7 +150,7 @@ class ItemsScreen extends StatelessWidget {
               ),
 
             ),
-            //const SizedBox(height: 24),
+
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -170,7 +170,7 @@ class ItemsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            //const SizedBox(height: 9),
+
             Expanded(
               child: ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 16),

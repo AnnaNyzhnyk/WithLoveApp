@@ -299,10 +299,10 @@ class RegScreenState extends State<RegScreen>{
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16), // щоб не прилипало до краю
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch, // дозволяє займати всю ширину
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(36),
@@ -312,7 +312,7 @@ class RegScreenState extends State<RegScreen>{
                     maxWidth: MediaQuery.of(context).size.width * 0.8,
                   ),
                   child: AspectRatio(
-                    aspectRatio: 336 / 277, // пропорції твоєї картинки
+                    aspectRatio: 336 / 277,
                     child: Image.asset(
                       'assets/images/logo.jpeg',
                       fit: BoxFit.contain,

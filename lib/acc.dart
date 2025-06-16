@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import 'dart:convert';
 import 'main.dart';
 import 'qr.dart';
@@ -67,7 +66,7 @@ class AccScreenState extends State<AccScreen> {
   @override
   void initState() {
     super.initState();
-    infoUser(widget.email);     // Завантажуємо з сервера
+    infoUser(widget.email);
   }
 
 
@@ -81,7 +80,7 @@ class AccScreenState extends State<AccScreen> {
         type: BottomNavigationBarType.fixed,
         selectedFontSize: 0,
         unselectedFontSize: 0,
-        iconSize: 0, // щоб Flutter не задавав зайві відступи
+        iconSize: 0,
         items: [
           BottomNavigationBarItem(
             icon: SizedBox(
@@ -233,7 +232,7 @@ class AccScreenState extends State<AccScreen> {
                               color: Color(0xFF0F0607),
                             ),
                           ),
-                          // Icon(Icons.edit, size: 30, color: Colors.white),
+
                           trailing: Text(
                             birthdate,
                             style: TextStyle(
@@ -247,17 +246,17 @@ class AccScreenState extends State<AccScreen> {
                       ),
                     ),
 
-                    ///номер телефону
+
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: Container(
-                        //padding: const EdgeInsets.symmetric(horizontal: 16),
+
                         decoration: BoxDecoration(
                           color: Color(0xFFFCE4EC),
                           borderRadius: BorderRadius.circular(35),
                         ),
                         child: EditableField(
-                          key: ValueKey(phone), // Додаєш key сюди також!
+                          key: ValueKey(phone),
                           label: 'Номер телефону',
                           initialValue: phone,
                           onSaved: (value) async {
@@ -270,7 +269,7 @@ class AccScreenState extends State<AccScreen> {
                     ),
 
 
-                    /// Вийти
+
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: Container(

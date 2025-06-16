@@ -4,7 +4,6 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:http/http.dart' as http;
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
 import 'dart:convert';
 import 'home.dart';
 import 'history.dart';
@@ -53,7 +52,6 @@ class QRScreenState extends State<QRScreen> {
           id = getId;
         });
       } else {
-        //шось придумаю
       }
     }
     catch (e) {
@@ -66,8 +64,8 @@ class QRScreenState extends State<QRScreen> {
   @override
   void initState() {
     super.initState();
-    loadUserData();             // Зчитуємо з Hive
-    infoUser(widget.email);     // Завантажуємо з сервера
+    loadUserData();
+    infoUser(widget.email);
   }
 
   @override
@@ -79,7 +77,7 @@ class QRScreenState extends State<QRScreen> {
         type: BottomNavigationBarType.fixed,
         selectedFontSize: 0,
         unselectedFontSize: 0,
-        iconSize: 0, // щоб Flutter не задавав зайві відступи
+        iconSize: 0,
         items: [
           BottomNavigationBarItem(
             icon: SizedBox(
@@ -161,7 +159,7 @@ class QRScreenState extends State<QRScreen> {
               )),
             );
           }
-          // Можеш додати дії для інших кнопок
+
         },
       ),
       body: SafeArea(
@@ -220,7 +218,6 @@ class QRScreenState extends State<QRScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  /// Білий жирний пунктир
                   DottedLine(
                     direction: Axis.horizontal,
                     lineLength: double.infinity,

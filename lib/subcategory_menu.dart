@@ -6,7 +6,6 @@ import 'qr.dart';
 import 'history.dart';
 import 'acc.dart';
 import 'menu.dart';
-//import 'fake_database.dart';
 import 'items_menu.dart';
 
 class SubcategoryScreen extends StatelessWidget {
@@ -24,7 +23,7 @@ class SubcategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Отримуємо список підкатегорій для переданої категорії
+
     final List<String> subcategories = subcategoryData.keys.toList();
 
     Widget buildSubcategoryItem(String title, BuildContext context) {
@@ -74,7 +73,7 @@ class SubcategoryScreen extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         selectedFontSize: 0,
         unselectedFontSize: 0,
-        iconSize: 0, // щоб Flutter не задавав зайві відступи
+        iconSize: 0,
         items: [
           BottomNavigationBarItem(
             icon: SizedBox(
@@ -164,7 +163,7 @@ class SubcategoryScreen extends StatelessWidget {
               )),
             );
           }
-          // Можеш додати дії для інших кнопок
+
         },
 
       ),

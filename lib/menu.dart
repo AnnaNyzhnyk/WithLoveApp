@@ -5,8 +5,7 @@ import 'home.dart';
 import 'qr.dart';
 import 'history.dart';
 import 'acc.dart';
-//import 'fake_database.dart'; // <-- тут у нас categoryData
-import 'subcategory_menu.dart'; // Для переходу на SubcategoryScreen
+import 'subcategory_menu.dart';
 
 class MenuScreen extends StatefulWidget {
   final String email;
@@ -21,11 +20,11 @@ class MenuScreenState extends State<MenuScreen> {
   bool no_internet = false;
   Map<String, Map<String, List<Map<String, dynamic>>>> _menuData = {};
   Future<void> menuData() async {
-    final url = Uri.parse('https://springboot-kafe.onrender.com/api/menuitems/grouped'); // 👈 замінити
+    final url = Uri.parse('https://springboot-kafe.onrender.com/api/menuitems/grouped');
 
     try {
       setState(() {
-        no_internet = false;  // успішно завантажили — помилки немає
+        no_internet = false;
       });
       final response = await http.get(url);
 
@@ -46,7 +45,6 @@ class MenuScreenState extends State<MenuScreen> {
         setState(() {});
 
       } else {
-        //тут буде картинка або напис, що нічо нема
       }
 
     }
@@ -54,14 +52,12 @@ class MenuScreenState extends State<MenuScreen> {
       setState(() {
         no_internet = true;
       });
-      /*Center(
-        child: Image.asset('assets/images/no_internet.png'),
-      );*/
+
     }
 
   }
 
-  // Функція для побудови елемента категорії
+
   Widget buildCategoryItem(String title, BuildContext context) {
     return SizedBox(
       height: 80,
@@ -116,7 +112,7 @@ class MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     final List<String> categories = _menuData.keys
-        .toList(); // Отримуємо список категорій
+        .toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -126,7 +122,7 @@ class MenuScreenState extends State<MenuScreen> {
         selectedFontSize: 0,
         unselectedFontSize: 0,
         iconSize: 0,
-        // щоб Flutter не задавав зайві відступи
+
         items: [
           BottomNavigationBarItem(
             icon: SizedBox(
@@ -213,7 +209,6 @@ class MenuScreenState extends State<MenuScreen> {
               )),
             );
           }
-          // Можеш додати дії для інших кнопок
         },
 
       ),
@@ -244,8 +239,6 @@ class MenuScreenState extends State<MenuScreen> {
               ),
             ),
 
-            //const SizedBox(height: 16),
-
             Expanded(
               child: no_internet
               ? ListView(
@@ -271,7 +264,7 @@ class MenuScreenState extends State<MenuScreen> {
                 },
                 separatorBuilder: (_, __) =>
                 const SizedBox(
-                    height: 16), // вертикальний відступ між категоріями
+                    height: 16),
               ),
             ),
           ],

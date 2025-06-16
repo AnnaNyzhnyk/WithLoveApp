@@ -9,9 +9,9 @@ import 'home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter(); // ініціалізація Hive
-  await Hive.openBox('userBox'); // відкриває box для зберігання//головна функція
-  runApp(WithLoveApp()); //запускаємо основний клас(застосунок)
+  await Hive.initFlutter();
+  await Hive.openBox('userBox');
+  runApp(WithLoveApp());
 }
 
 class WithLoveApp extends StatefulWidget {
@@ -20,16 +20,16 @@ class WithLoveApp extends StatefulWidget {
   WithLoveAppState createState() => WithLoveAppState();
 }
 
-class WithLoveAppState extends State<WithLoveApp> { // описуємо основний клас
+class WithLoveAppState extends State<WithLoveApp> {
   @override
-  Widget build(BuildContext context) { //метод build, що створює візуал
-    return MaterialApp( //повертаємо основні дані про застосунок
-      theme: ThemeData( // тема(колір, шрифти)
-        canvasColor: Color(0xFFEBA2AC) //основний фон для більшості об'єктів
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        canvasColor: Color(0xFFEBA2AC)
       ),
-      title: 'With Love Coffee Space', //назва
-      home: LoginScreen(), //екран, з якого запускається застосунок
-      debugShowCheckedModeBanner: false, //відключає напис дебаг
+      title: 'With Love Coffee Space',
+      home: LoginScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -48,14 +48,14 @@ class LoginScreenState extends State<LoginScreen>{
   int id = 0;
 
   void loadUserData() async {
-    var box = await Hive.openBox('userBox'); // відкриваємо коробку
+    var box = await Hive.openBox('userBox');
     setState(() {
       email = box.get('email', defaultValue: '');
       name = box.get('fullName', defaultValue: '');
       phone = box.get('phone', defaultValue: '');
       birthdate = box.get('birthdate', defaultValue: '');
       bonusPoints = box.get('bonusPoints', defaultValue: 0);
-      id = box.get('id', defaultValue: 0); // якщо ще не зберігався — буде 0
+      id = box.get('id', defaultValue: 0);
     });
   }
 
@@ -129,9 +129,6 @@ class LoginScreenState extends State<LoginScreen>{
       );
       return;
     }
-    /*setState(() {
-      isLoading = true;
-    });*/
 
     final url = Uri.parse("https://springboot-kafe.onrender.com/users/login");
     final Map<String, dynamic> userData = {
@@ -359,10 +356,10 @@ class LoginScreenState extends State<LoginScreen>{
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24), // щоб не прилипало до краю
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch, // дозволяє займати всю ширину
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(35),

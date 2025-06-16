@@ -31,7 +31,7 @@ class HistoryScreenState extends State<HistoryScreen> {
       print("Status code: ${response.statusCode}");
       print("Body: ${response.body}");
       setState(() {
-        no_internet = false;  // успішно завантажили — помилки немає
+        no_internet = false;
       });
 
       if (response.statusCode == 200) {
@@ -92,7 +92,6 @@ class HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final List<Map<String, dynamic>> allOrders = orders;
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
@@ -100,7 +99,7 @@ class HistoryScreenState extends State<HistoryScreen> {
         type: BottomNavigationBarType.fixed,
         selectedFontSize: 0,
         unselectedFontSize: 0,
-        iconSize: 0, // щоб Flutter не задавав зайві відступи
+        iconSize: 0,
         items: [
           BottomNavigationBarItem(
             icon: SizedBox(
@@ -272,15 +271,7 @@ class HistoryScreenState extends State<HistoryScreen> {
                           dashGapLength: 6.0,
                           dashColor: Colors.white,
                         ),
-                        /*Text(
-                          'Замовлення:',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),*/
                         SizedBox(height: 4),
-                        // Відображаємо всі позиції замовлення
                         ...List<Widget>.from(order['items'].map<Widget>((item) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2),

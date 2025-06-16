@@ -264,10 +264,10 @@ class RegScreenState2 extends State<RegScreen2>{
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16), // щоб не прилипало до краю
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch, // дозволяє займати всю ширину
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(36),
