@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:http/http.dart' as http;
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import 'dart:convert';
 import 'home.dart';
 import 'history.dart';
@@ -18,14 +21,25 @@ class QRScreen extends StatefulWidget {
 
 class QRScreenState extends State<QRScreen> {
 
-  int id = 0;
+  String email = '';
   int bonusPoints = 0;
+  int id = 0;
+
+  void loadUserData() async {
+    var box = await Hive.openBox('userBox'); // відкриваємо коробку
+    setState(() {
+      email = box.get('email', defaultValue: '');
+      bonusPoints = box.get('bonusPoints', defaultValue: 0);
+      id = box.get('id', defaultValue: 0); // якщо ще не зберігався — буде 0
+    });
+  }
 
   Future<void> infoUser(String email) async {
     final Uri url = Uri.parse('https://springboot-kafe.onrender.com/users/info?email=$email');
 
     try {
       final response = await http.get(url);
+
       print("Status code: ${response.statusCode}");
       print("Body: ${response.body}");
 
@@ -52,8 +66,10 @@ class QRScreenState extends State<QRScreen> {
   @override
   void initState() {
     super.initState();
-    infoUser(widget.email);
+    loadUserData();             // Зчитуємо з Hive
+    infoUser(widget.email);     // Завантажуємо з сервера
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

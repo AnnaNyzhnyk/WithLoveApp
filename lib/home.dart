@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
 import 'qr.dart';
 import 'history.dart';
@@ -18,6 +20,10 @@ class HomeScreen extends StatefulWidget {
 
 
 class HomeScreenState extends State<HomeScreen> {
+  //String email = '';
+  String name = '';
+  String birthdate = '';
+  String phone = '';
   int bonusPoints = 0;
   int id = 0;
 
@@ -39,6 +45,9 @@ class HomeScreenState extends State<HomeScreen> {
           bonusPoints = getBonusPoints;
           id = getId;
         });
+        final box = await Hive.openBox('userBox');
+        await box.put('id', id);
+        await box.put('bonusPoints', bonusPoints);
       } else {
         //шось придумаю
       }
@@ -48,13 +57,25 @@ class HomeScreenState extends State<HomeScreen> {
       //щось придумаю
     }
 
-  }//клас головної сторінки
+  }
+
+  void loadUserData() async {
+    var box = await Hive.openBox('userBox'); // відкриваємо коробку
+    setState(() {
+      //email = box.get('email', defaultValue: '');
+      bonusPoints = box.get('bonusPoints', defaultValue: 0);
+      id = box.get('id', defaultValue: 0);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    infoUser(widget.email);
+    loadUserData();             // Зчитуємо з Hive
+    infoUser(widget.email);     // Завантажуємо з сервера
   }
+
+
   @override
   Widget build(BuildContext context) { //малюємо візуал
     return Scaffold( //каркас, фундамент, основа, база, архітектура сторінки
@@ -262,49 +283,6 @@ class HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
 
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Останні замовлення', style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFF0F0607))),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => HistoryScreen(
-                                          email: widget.email
-                                      )),
-                                    );
-                                  },
-                                  child: const Text('Всі >', style: TextStyle(
-                                      color: Color(0xFF893B46), fontSize: 18)),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Color(0xFFFCE4EC),
-                              borderRadius: BorderRadius.circular(35),
-                            ),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Замовлення № id',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Color(0xFF0F0607),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
                           const SizedBox(height: 16,),
                         ]
                     ),

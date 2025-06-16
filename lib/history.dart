@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:dotted_line/dotted_line.dart';
 import 'dart:convert';
 import 'home.dart';
 import 'qr.dart';
 import 'acc.dart';
 import 'menu.dart';
-import 'order_detail.dart';
-//import 'fake_database.dart';
+
 
 class HistoryScreen extends StatefulWidget {
   final String email;
@@ -17,7 +17,10 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class HistoryScreenState extends State<HistoryScreen> {
+  String email = '';
+  int id = 0;
   int userId = 0;
+  bool no_internet = false;
 
   Future<void> infoUser(String email) async {
 
@@ -27,6 +30,9 @@ class HistoryScreenState extends State<HistoryScreen> {
       final response = await http.get(url);
       print("Status code: ${response.statusCode}");
       print("Body: ${response.body}");
+      setState(() {
+        no_internet = false;  // успішно завантажили — помилки немає
+      });
 
       if (response.statusCode == 200) {
         final decodedBody = utf8.decode(response.bodyBytes);
@@ -35,41 +41,16 @@ class HistoryScreenState extends State<HistoryScreen> {
         setState(() {
           userId = getId;
         });
-        await menuData();
         await ordersData(getId);
       } else {}
     }
-    catch (e){}
-  }
-
-
-  Map<String, Map<String, List<Map<String, dynamic>>>> _menuData = {};
-  Future<void> menuData() async {
-    final url = Uri.parse('https://springboot-kafe.onrender.com/menuitems/grouped'); // 👈 замінити
-
-    try {
-      final response = await http.get(url);
-
-      print("Status code: ${response.statusCode}");
-      print("Body: ${response.body}");
-
-      if (response.statusCode == 200) {
-        final decodedBody = utf8.decode(response.bodyBytes);
-        final data = json.decode(decodedBody) as Map<String, dynamic>;
-        _menuData = data.map((categoryKey, subcategoriesValue) {
-          final subcategories = (subcategoriesValue as Map<String, dynamic>).map((subcategoryKey, itemsValue) {
-            final itemsList = (itemsValue as List<dynamic>).map((item) => item as Map<String, dynamic>).toList();
-            return MapEntry(subcategoryKey, itemsList);
-          });
-          return MapEntry(categoryKey, subcategories);
-        });
-        setState(() {});
-      } else {
-      }
-    }
     catch (e){
+      setState(() {
+        no_internet = true;
+      });
     }
   }
+
 
   List<dynamic> orders = [];
   Future<void> ordersData(int userId) async {
@@ -102,45 +83,12 @@ class HistoryScreenState extends State<HistoryScreen> {
     } catch (e) {}
   }
 
-  double findPrice(int itemId) {
-    for (var category in _menuData.values) {
-      for (var subcategory in category.values) {
-        for (var menuItem in subcategory) {
-          if (menuItem['id'] == itemId) {
-            return menuItem['price']?.toDouble() ?? 0.0;
-          }
-        }
-      }
-    }
-    return 0.0;
-  }
-
-  List<Map<String, dynamic>> orderItemsWithPrice(List<dynamic> orderItems) {
-    List<Map<String, dynamic>> result = [];
-    for (var item in orderItems) {
-      int itemId = item['itemId'];
-      int quantity = item['quantity'];
-
-      double price = findPrice(itemId);
-      result.add({
-        'itemId': itemId,
-        'quantity': quantity,
-        'price': price,
-      });
-    }
-
-    return result;
-  }
-
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    infoUser(widget.email);
   }
 
-  Future<void> _loadUserData() async {
-    await infoUser(widget.email);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -266,50 +214,87 @@ class HistoryScreenState extends State<HistoryScreen> {
 
             ),
             Expanded(
-              child: ListView.builder(
+              child: no_internet
+                  ? ListView(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                  ),
+                  Center(
+                    child: FractionallySizedBox(
+                      widthFactor: 0.4,
+                      child: Image.asset('assets/images/no_internet.png'),
+                    ),
+                  ),
+                ],
+              )
+                  : ListView.builder(
                 padding: EdgeInsets.only(top: 16, left: 16, right: 16),
                 itemCount: orders.length,
                 itemBuilder: (context, index) {
                   final order = orders[index];
-                  return GestureDetector(
-                    onTap: () {
-                      // Перехід на екран з деталями замовлення
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => OrderDetailsScreen(
-                            email: widget.email,
-                            order: {
-                              ...order,
-                              'items': orderItemsWithPrice(order['items']),
-                            },
+                  final orderDate = DateTime.parse(order['orderDate']);
+                  final formattedDate = "${orderDate.day.toString().padLeft(2,'0')}.${orderDate.month.toString().padLeft(2,'0')}.${orderDate.year} ${orderDate.hour.toString().padLeft(2,'0')}:${orderDate.minute.toString().padLeft(2,'0')}";
+
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 16),
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Color(0xFFFCE4EC),
+                      borderRadius: BorderRadius.circular(35),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '$formattedDate',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color(0xFF0F0607),
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      );
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 16),
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFCE4EC),
-                        borderRadius: BorderRadius.circular(35),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 8),
-                          Text(
-                            'Дата: ${order['orderDate']}',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF0F0607),
-                            ),
+                        SizedBox(height: 8),
+                        Text(
+                          '${order['totalPrice']}₴',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Color(0xFF0F0607),
                           ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(height: 8),
+                        DottedLine(
+                          direction: Axis.horizontal,
+                          lineLength: double.infinity,
+                          lineThickness: 2.5,
+                          dashLength: 8.0,
+                          dashGapLength: 6.0,
+                          dashColor: Colors.white,
+                        ),
+                        /*Text(
+                          'Замовлення:',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),*/
+                        SizedBox(height: 4),
+                        // Відображаємо всі позиції замовлення
+                        ...List<Widget>.from(order['items'].map<Widget>((item) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Text(
+                              '${item['itemName']} x${item['quantity']}',
+                              style: TextStyle(fontSize: 20, color: Color(0xFF3E1E20)),
+                            ),
+                          );
+                        })),
+                      ],
                     ),
                   );
                 },
+
               ),
             ),
 

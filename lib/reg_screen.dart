@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'main.dart';
@@ -421,76 +420,3 @@ class RegScreenState extends State<RegScreen>{
     );
   }
 }
-
-/*Future<void> registerUser() async {
-    final url = Uri.parse("https://springboot-kafe.onrender.com/users/register");
-    final Map<String, dynamic> userData = {
-      "username": phoneController.text,
-      "password": passwordController.text,
-      "birthdate": birthdateController.text,
-      "bonusPoints": 100,
-      "phone": phoneController.text,
-      "qrCode": "placeholder-qr",
-    };
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "aplication/json"},
-        body: json.encode(userData),
-      );
-
-      if (response.statusCode == 200) {
-        showDialog(
-          context: context,
-          builder: (_) =>
-              AlertDialog(
-                title: Text("Успішно!"),
-                content: Text("Реєстрація пройша успішно"),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
-                      );
-                    },
-                    child: Text("OK"),
-                  ),
-                ],
-              ),
-        );
-      } else {
-        showError("Помилка: ${response.statusCode}\n${response.body}");
-      }
-    } catch (e) {
-      showError("Сталася помилака: $e");
-    }
-  }
-  void showError(String message) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text("Помилка"),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("Закрити"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    phoneController.dispose();
-    passwordController.dispose();
-    birthdateController.dispose();
-    super.dispose();
-  }
-
-}
-*/

@@ -17,12 +17,16 @@ class MenuScreen extends StatefulWidget {
 }
 
 class MenuScreenState extends State<MenuScreen> {
-  //const MenuScreen({Key? key}) : super(key: key);
+
+  bool no_internet = false;
   Map<String, Map<String, List<Map<String, dynamic>>>> _menuData = {};
   Future<void> menuData() async {
-    final url = Uri.parse('https://springboot-kafe.onrender.com/menuitems/grouped'); // 👈 замінити
+    final url = Uri.parse('https://springboot-kafe.onrender.com/api/menuitems/grouped'); // 👈 замінити
 
     try {
+      setState(() {
+        no_internet = false;  // успішно завантажили — помилки немає
+      });
       final response = await http.get(url);
 
       print("Status code: ${response.statusCode}");
@@ -47,9 +51,12 @@ class MenuScreenState extends State<MenuScreen> {
 
     }
     catch (e){
-      Center(
+      setState(() {
+        no_internet = true;
+      });
+      /*Center(
         child: Image.asset('assets/images/no_internet.png'),
-      );
+      );*/
     }
 
   }
@@ -240,7 +247,21 @@ class MenuScreenState extends State<MenuScreen> {
             //const SizedBox(height: 16),
 
             Expanded(
-              child: ListView.separated(
+              child: no_internet
+              ? ListView(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                  ),
+                  Center(
+                    child: FractionallySizedBox(
+                      widthFactor: 0.4,
+                      child: Image.asset('assets/images/no_internet.png'),
+                    ),
+                  ),
+                ],
+              )
+                  : ListView.separated(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                 // відступ з усіх боків
                 itemCount: categories.length,

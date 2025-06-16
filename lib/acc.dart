@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'dart:convert';
 import 'main.dart';
 import 'qr.dart';
 import 'history.dart';
 import 'menu.dart';
-//import 'login_screen.dart';
 import 'home.dart';
 
 class AccScreen extends StatefulWidget {
@@ -20,7 +20,10 @@ class AccScreenState extends State<AccScreen> {
   String name = '';
   String birthdate = '';
   String phone = '';
-  //int id = 0;
+  int bonusPoints = 0;
+  int id = 0;
+
+
 
   Future<void> infoUser(String email) async {
 
@@ -31,35 +34,42 @@ class AccScreenState extends State<AccScreen> {
       print("Status code: ${response.statusCode}");
       print("Body: ${response.body}");
 
+
       if (response.statusCode == 200) {
         final decodedBody = utf8.decode(response.bodyBytes);
         final data = jsonDecode(decodedBody) as Map<String, dynamic>;
         final int getId = data['id'];
-        final String getName = data['fullName'];
-        final String getBirthdate = data['birthdate'];
-        final String getPhone = data['phone'];
+        final getName = data['fullName'];
+        final getBirthdate = data['birthdate'];
+        final getPhone = data['phone'];
+        final getBonusPoints = data['bonusPoints'];
         setState(() {
+          id = getId;
           name = getName;
           birthdate = getBirthdate;
           phone = getPhone;
-          //id = getId;
-        });
-      } else {
-        //шось придумаю
-      }
+          bonusPoints = getBonusPoints;
 
+          print('UI updated:');
+          print('name: $name');
+          print('birthdate: $birthdate');
+          print('phone: $phone');
+        });
+      } else {}
     }
     catch (e){
-      //щось придумаю
-    }
 
+    }
   }
+
+
 
   @override
   void initState() {
     super.initState();
-    infoUser(widget.email);
+    infoUser(widget.email);     // Завантажуємо з сервера
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +163,6 @@ class AccScreenState extends State<AccScreen> {
               )),
             );
           }
-          // Можеш додати дії для інших кнопок
         },
 
       ),
@@ -194,13 +203,16 @@ class AccScreenState extends State<AccScreen> {
                           borderRadius: BorderRadius.circular(35),
                         ),
                         child: EditableField(
+                          key: ValueKey(name),
                           label: 'Ім’я',
-                          initialValue: '$name',
-                          onSaved: (value) {
-                            print('Нове ім’я: $value');
-                          },
-                        ),
+                          initialValue: name,
+                          onSaved: (value) async {
+                          setState(() {
+                            name = value;
+                          });
+                        },
                       ),
+            ),
                     ),
 
                     ///день народження
@@ -216,16 +228,16 @@ class AccScreenState extends State<AccScreen> {
                           title: const Text(
                             'День народження',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 20,
                               fontWeight: FontWeight.w500,
                               color: Color(0xFF0F0607),
                             ),
                           ),
                           // Icon(Icons.edit, size: 30, color: Colors.white),
                           trailing: Text(
-                            '$birthdate',
+                            birthdate,
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 20,
                               fontWeight: FontWeight.w500,
                               color: Color(0xFF0F0607),
                             ),
@@ -245,37 +257,18 @@ class AccScreenState extends State<AccScreen> {
                           borderRadius: BorderRadius.circular(35),
                         ),
                         child: EditableField(
+                          key: ValueKey(phone), // Додаєш key сюди також!
                           label: 'Номер телефону',
-                          initialValue: '$phone',
-                          onSaved: (value) {
-                            print('Новий номер: $value');
+                          initialValue: phone,
+                          onSaved: (value) async {
+                            setState(() {
+                              phone = value;
+                            });
                           },
                         ),
                       ),
                     ),
-                    /*/// Зворотний зв'язок
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: Color(0xFFFCE4EC),
-                          borderRadius: BorderRadius.circular(35),
-                        ),
-                        child: ListTile(
-                          title: const Text(
-                            'Зворотний зв’язок',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF0F0607),
-                            ),
-                          ),
-                          trailing: Icon(Icons.chevron_right, size: 60, color: Colors.white),
-                          onTap: () {},
-                        ),
-                      ),
-                    ),*/
+
 
                     /// Вийти
                     Padding(
@@ -290,7 +283,7 @@ class AccScreenState extends State<AccScreen> {
                           title: const Text(
                             'Вийти',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 20,
                               fontWeight: FontWeight.w500,
                               color: Color(0xFF0F0607),
                             ),
@@ -308,7 +301,6 @@ class AccScreenState extends State<AccScreen> {
                   ],
                 ),
             ),
-            /// Блок з ім’ям
 
           ],
         ),
@@ -336,6 +328,15 @@ class EditableField extends StatefulWidget {
 class _EditableFieldState extends State<EditableField> {
   bool isEditing = false;
   late TextEditingController controller;
+
+  @override
+  void didUpdateWidget(covariant EditableField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialValue != widget.initialValue) {
+      controller.text = widget.initialValue;
+    }
+  }
+
 
   @override
   void initState() {
@@ -375,7 +376,7 @@ class _EditableFieldState extends State<EditableField> {
               Text(
                 widget.label,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 20,
                   fontWeight: FontWeight.w400,
                   color: Color(0xFF0F0607),
                 ),
@@ -384,7 +385,7 @@ class _EditableFieldState extends State<EditableField> {
               Text(
                 controller.text,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.w500,
                   color: Color(0xFF0F0607),
                 ),

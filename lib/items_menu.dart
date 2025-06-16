@@ -196,7 +196,7 @@ class ItemsScreen extends StatelessWidget {
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),
                           ),
-                          child: Image.asset(
+                          child: Image.network(
                             image,
                             height: 177,
                             width: double.infinity,

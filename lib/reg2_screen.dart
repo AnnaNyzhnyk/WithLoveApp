@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:http/http.dart' as http;
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
 import 'main.dart';
 import 'home.dart';
@@ -108,6 +110,14 @@ class RegScreenState2 extends State<RegScreen2>{
       );
 
       if (response.statusCode == 200) {
+        var box = Hive.box('userBox');
+        await box.put('fullName', nameController.text);
+        await box.put('birthdate', birthdateController.text);
+        await box.put('phone', phoneController.text);
+        await box.put('email', email);
+        await box.put('bonusPoints', 0);
+        print('Збережено: ${box.get('fullName')}');
+
         nameController.clear();
         phoneController.clear();
         birthdateController.clear();

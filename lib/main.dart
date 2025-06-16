@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
 import 'reg_screen.dart';
 import 'home.dart';
 
-void main() { //головна функція
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter(); // ініціалізація Hive
+  await Hive.openBox('userBox'); // відкриває box для зберігання//головна функція
   runApp(WithLoveApp()); //запускаємо основний клас(застосунок)
 }
 
@@ -36,6 +40,25 @@ class LoginScreen extends StatefulWidget{
 }
 
 class LoginScreenState extends State<LoginScreen>{
+  String email = '';
+  String name = '';
+  String birthdate = '';
+  String phone = '';
+  int bonusPoints = 0;
+  int id = 0;
+
+  void loadUserData() async {
+    var box = await Hive.openBox('userBox'); // відкриваємо коробку
+    setState(() {
+      email = box.get('email', defaultValue: '');
+      name = box.get('fullName', defaultValue: '');
+      phone = box.get('phone', defaultValue: '');
+      birthdate = box.get('birthdate', defaultValue: '');
+      bonusPoints = box.get('bonusPoints', defaultValue: 0);
+      id = box.get('id', defaultValue: 0); // якщо ще не зберігався — буде 0
+    });
+  }
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   //bool isLoading = false;
