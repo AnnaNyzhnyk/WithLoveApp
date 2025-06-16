@@ -181,7 +181,7 @@ class ItemsScreen extends StatelessWidget {
                   final name = item['name'] ?? '';
                   final price = item['price'] ?? '';
                   final description = item['description'] ?? '';
-                  final image = item['image'] ?? '';
+                  final image = item['photoUr'] ?? '';
 
                   return Container(
                     decoration: BoxDecoration(
